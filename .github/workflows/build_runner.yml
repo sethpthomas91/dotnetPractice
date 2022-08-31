@@ -1,11 +1,12 @@
-name: Self-Hosted Build
+name: Build-Deploy
+
 on:
   push:
   pull_request:
-    # branches: [ dev ]
+
 jobs:	
   build:	
-    runs-on: self-hosted	
+    runs-on: ubuntu-latest
     steps:	
     - uses: actions/checkout@v3	
     - name: Setup .NET	
@@ -23,5 +24,18 @@ jobs:
     - name: Upload Build Artifact
       uses: actions/upload-artifact@v2
       with:
-        name: Application_Artifact
-        path: /Users/sthomas/Learning/Runners/actions-runner/_work/dotnetPractice/dotnetPractice/release/
+        name: deploy
+        path: /home/runner/work/dotnetPractice/dotnetPractice/release/
+
+  dev:
+    name: Deploy to Dev
+    environment:
+      name: dev
+    runs-on: self-hosted
+    needs: build
+
+    steps:
+    - name: Download Deploy
+      uses: actions/download-artifact@v2
+      with:
+        name: deploy

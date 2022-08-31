@@ -1,0 +1,15 @@
+name: Build
+on:
+  push:
+  pull_request:
+    types: [opened, synchronize, reopened]
+jobs:
+  build:
+    name: Build
+    runs-on: self-hosted
+    steps:
+      - name: Test command
+        run: |
+          pwd 
+          echo $SHELL
+          echo "This is running on a self-hosted VM"

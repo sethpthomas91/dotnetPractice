@@ -39,3 +39,11 @@ jobs:
       uses: actions/download-artifact@v2
       with:
         name: deploy
+    - name: Deploy to dev
+      run: dotnet /Users/sthomas/Learning/Runners/actions-runner/_work/dotnetPractice/dotnetPractice/RazorApp.dll &
+    - name: Get information
+      run: dotnet --version
+    - name: Keep Open for 10 minutes
+      run: sleep 300
+    - name: Announce closure
+      run: echo "Exiting process"

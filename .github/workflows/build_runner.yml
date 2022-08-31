@@ -1,15 +1,21 @@
-name: Build
+name: Self-Hosted Build
 on:
   push:
   pull_request:
-    types: [opened, synchronize, reopened]
-jobs:
-  build:
-    name: Build
-    runs-on: self-hosted
-    steps:
-      - name: Test command
-        run: |
-          pwd 
-          echo $SHELL
-          echo "This is running on a self-hosted VM"
+    # branches: [ dev ]
+jobs:	
+  build:	
+    runs-on: self-hosted	
+    steps:	
+    - uses: actions/checkout@v3	
+    - name: Setup .NET	
+      uses: actions/setup-dotnet@v2	
+      with:	
+        dotnet-version: 6.0.x	
+    - name: Restore dependencies	
+      run: dotnet restore	
+    - name: Build	
+      run: dotnet build --no-restore	
+    - name: Test	
+      run: dotnet test --no-build --verbosity normal 
+        

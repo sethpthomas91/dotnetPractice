@@ -2,6 +2,7 @@ name: Build-Deploy
 
 on:
   pull_request:
+  push:
 
 jobs:	
   build:	
@@ -39,13 +40,7 @@ jobs:
       with:
         name: deploy
     - name: Deploy to dev
-      run: dotnet /Users/sthomas/Learning/Runners/actions-runner/_work/dotnetPractice/dotnetPractice/RazorApp.dll &
-    - name: Get information
-      run: dotnet --version
-    - name: Keep Open for 5 minutes
-      run: sleep 300
-    - name: Announce closure
-      run: echo "Exiting dev"
+      run: dotnet /Users/sthomas/Learning/Runners/actions-runner/_work/dotnetPractice/dotnetPractice/RazorApp.dll
 
   prod:
     name: Deploy to production

@@ -20,7 +20,7 @@ jobs:
     - name: Test	
       run: dotnet test --no-build --verbosity normal 
     - name: Publish
-      run: dotnet publish src/RazorApp.csproj -c Release -o release
+      run: dotnet publish src/RazorApp.csproj -c Release -o release --os linux --sc true
     - name: Upload Build Artifact
       uses: actions/upload-artifact@v2
       with:
@@ -40,7 +40,7 @@ jobs:
       with:
         name: deploy
     - name: Deploy to dev
-      run: dotnet /Users/sthomas/Learning/Runners/actions-runner/_work/dotnetPractice/dotnetPractice/RazorApp.dll
+      run: /Users/sthomas/Learning/Runners/actions-runner/_work/dotnetPractice/dotnetPractice/release/RazorApp
 
   prod:
     name: Deploy to production

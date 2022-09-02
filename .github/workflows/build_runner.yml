@@ -20,7 +20,7 @@ jobs:
     - name: Test	
       run: dotnet test --no-build --verbosity normal 
     - name: Publish
-      run: dotnet publish src/RazorApp.csproj -c Release -o release --os linux --sc true
+      run: dotnet publish src/RazorApp.csproj -c Release -o release -r osx-x64 --self-contained
     - name: Upload Build Artifact
       uses: actions/upload-artifact@v2
       with:
@@ -39,24 +39,34 @@ jobs:
       uses: actions/download-artifact@v2
       with:
         name: deploy
+    - name: Install dependencies
+      run: |
+        dotnet restore
+        dotnet build
+      
     - name: Deploy to dev
-      run: /Users/sthomas/Learning/Runners/actions-runner/_work/dotnetPractice/dotnetPractice/release/RazorApp
+      # run: |
+      #   nohup dotnet RazorApp.dll &
+      #   echo "$!" >> "$HOME/dotnet_old_pid"
+      run: |
+        RUNNER_TRACKING_ID="" && RazorApp &
+        echo "$!" >> "$HOME/dotnet_old_pid"
 
-  prod:
-    name: Deploy to production
-    environment:
-      name: production
-    runs-on: self-hosted
-    needs: dev
+  # prod:
+  #   name: Deploy to production
+  #   environment:
+  #     name: production
+  #   runs-on: self-hosted
+  #   needs: dev
 
-    steps:
-    - name: Download Deploy
-      uses: actions/download-artifact@v2
-      with:
-        name: deploy
-    - name: Deploy to dev
-      run: dotnet /Users/sthomas/Learning/Runners/actions-runner/_work/dotnetPractice/dotnetPractice/RazorApp.dll &
-    - name: Keep Open for 5 minutes
-      run: sleep 300
-    - name: Announce closure
-      run: echo "Exiting prod"
+  #   steps:
+  #   - name: Download Deploy
+  #     uses: actions/download-artifact@v2
+  #     with:
+  #       name: deploy
+  #   - name: Deploy to dev
+  #     run: dotnet /Users/sthomas/Learning/Runners/actions-runner/_work/dotnetPractice/dotnetPractice/RazorApp.dll &
+  #   - name: Keep Open for 5 minutes
+  #     run: sleep 300
+  #   - name: Announce closure
+  #     run: echo "Exiting prod"

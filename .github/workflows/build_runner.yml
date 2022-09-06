@@ -39,34 +39,17 @@ jobs:
       uses: actions/download-artifact@v2
       with:
         name: deploy
-    - name: Install dependencies
+
+    - name: Kill old process
       run: |
-        dotnet restore
-        dotnet build
+        if test -f "$HOME/dotnet_old_pid"; then
+        echo "This should print"
+        CURRENT_PID=$(cat "$HOME/dotnet_old_pid")
+        kill $CURRENT_PID
+        fi
       
     - name: Deploy to dev
-      # run: |
-      #   nohup dotnet RazorApp.dll &
-      #   echo "$!" >> "$HOME/dotnet_old_pid"
       run: |
-        RUNNER_TRACKING_ID="" && RazorApp &
-        echo "$!" >> "$HOME/dotnet_old_pid"
-
-  # prod:
-  #   name: Deploy to production
-  #   environment:
-  #     name: production
-  #   runs-on: self-hosted
-  #   needs: dev
-
-  #   steps:
-  #   - name: Download Deploy
-  #     uses: actions/download-artifact@v2
-  #     with:
-  #       name: deploy
-  #   - name: Deploy to dev
-  #     run: dotnet /Users/sthomas/Learning/Runners/actions-runner/_work/dotnetPractice/dotnetPractice/RazorApp.dll &
-  #   - name: Keep Open for 5 minutes
-  #     run: sleep 300
-  #   - name: Announce closure
-  #     run: echo "Exiting prod"
+        RUNNER_TRACKING_ID="" 
+        RazorApp &
+        echo $! > "$HOME/dotnet_old_pid"

@@ -2,6 +2,7 @@ name: Build-Deploy
 
 on:
   pull_request:
+  push:
 
 jobs:	
   build:	
@@ -19,7 +20,7 @@ jobs:
     - name: Test	
       run: dotnet test --no-build --verbosity normal 
     - name: Publish
-      run: dotnet publish src/RazorApp.csproj -c Release -o release
+      run: dotnet publish src/RazorApp.csproj -c Release -o release -r osx-x64 --self-contained
     - name: Upload Build Artifact
       uses: actions/upload-artifact@v2
       with:
@@ -38,30 +39,17 @@ jobs:
       uses: actions/download-artifact@v2
       with:
         name: deploy
-    - name: Deploy to dev
-      run: dotnet /Users/sthomas/Learning/Runners/actions-runner/_work/dotnetPractice/dotnetPractice/RazorApp.dll &
-    - name: Get information
-      run: dotnet --version
-    - name: Keep Open for 5 minutes
-      run: sleep 300
-    - name: Announce closure
-      run: echo "Exiting dev"
 
-  prod:
-    name: Deploy to production
-    environment:
-      name: production
-    runs-on: self-hosted
-    needs: dev
-
-    steps:
-    - name: Download Deploy
-      uses: actions/download-artifact@v2
-      with:
-        name: deploy
+    - name: Kill old process
+      run: |
+        if test -f "$HOME/dotnet_old_pid"; then
+        echo "This should print"
+        CURRENT_PID=$(cat "$HOME/dotnet_old_pid")
+        kill $CURRENT_PID
+        fi
+      
     - name: Deploy to dev
-      run: dotnet /Users/sthomas/Learning/Runners/actions-runner/_work/dotnetPractice/dotnetPractice/RazorApp.dll &
-    - name: Keep Open for 5 minutes
-      run: sleep 300
-    - name: Announce closure
-      run: echo "Exiting prod"
+      run: |
+        RUNNER_TRACKING_ID="" 
+        RazorApp &
+        echo $! > "$HOME/dotnet_old_pid"

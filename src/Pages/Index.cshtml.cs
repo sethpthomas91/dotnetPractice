@@ -22,6 +22,6 @@ public class IndexModel : PageModel
 
     public string MyToken()
     {
-        return Configuration["MyToken"];
+        return Configuration["SECRET_TOKEN"];
     }
 }

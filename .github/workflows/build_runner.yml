@@ -43,10 +43,14 @@ jobs:
     - name: Kill old process
       run: |
         if test -f "$HOME/dotnet_old_pid"; then
-        echo "This should print"
         CURRENT_PID=$(cat "$HOME/dotnet_old_pid")
         kill $CURRENT_PID
         fi
+
+    - name: Inject Environment Variables
+      run: |
+        NEW_TOKEN=${{ secrets.SECRET_TOKEN }}
+        sed -i "" "s/DEFAULT_TOKEN/${NEW_TOKEN}/g" appsettings.json
       
     - name: Deploy to dev
       run: |

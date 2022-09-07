@@ -5,6 +5,10 @@ builder.Services.AddRazorPages();
 
 var app = builder.Build();
 
+
+builder.Configuration.AddJsonFile("./appsettings.json");
+
+
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {

@@ -43,7 +43,6 @@ jobs:
     - name: Kill old process
       run: |
         if test -f "$HOME/dotnet_old_pid"; then
-        echo "This should print"
         CURRENT_PID=$(cat "$HOME/dotnet_old_pid")
         kill $CURRENT_PID
         fi

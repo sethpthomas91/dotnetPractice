@@ -7,11 +7,6 @@ var app = builder.Build();
 
 builder.Configuration.AddJsonFile("./release/appsettings.json");
 
-// displays all config options on application start
-foreach (var c in builder.Configuration.AsEnumerable())
-{
-    Console.WriteLine(c.Key + " = " + c.Value);
-}
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
